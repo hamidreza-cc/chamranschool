@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>پوستر با لوگوی متحرک</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+      background-color: #ffffff;
+      font-family: sans-serif;
+      overflow: hidden;
+    }
+    .loader-container, .poster-container {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: opacity 1s ease;
+    }
+
+    /* انیمیشن لوگو */
+    .logo {
+      width: 120px;
+      height: auto;
+      animation: heartbeat 1.5s infinite;
+    }
+
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+
+    /* مخفی‌سازی */
+    .hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .poster-container img {
+      max-width: 90%;
+      max-height: 90%;
+      object-fit: contain;
+    }
+
+    .fallback-text {
+      color: black;
+      font-size: 1.5rem;
+      text-align: center;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- صفحه‌ی لودینگ با لوگو -->
+  <div class="loader-container" id="loader">
+    <img src="logo.png" alt="لوگو" class="logo" />
+  </div>
+
+  <!-- پوستر -->
+  <div class="poster-container hidden" id="posterContainer">
+    <img id="poster" src="poster.jpg" alt="پوستر"
+         crossorigin="anonymous"
+         onerror="this.style.display='none'; document.getElementById('fallback').style.display='block';">
+    <div id="fallback" class="fallback-text">متأسفیم، تصویر بارگذاری نشد.</div>
+  </div>
+
+  <!-- Color Thief -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.2/color-thief.umd.js"></script>
+
+  <!-- اسکریپت لود پوستر -->
+  <script>
+    window.addEventListener('load', function () {
+      const loader = document.getElementById('loader');
+      const posterContainer = document.getElementById('posterContainer');
+      const img = document.getElementById('poster');
+      const colorThief = new ColorThief();
+
+      setTimeout(() => {
+        // محو کردن لوگو و نمایش پوستر
+        loader.classList.add('hidden');
+        posterContainer.classList.remove('hidden');
+
+        // تنظیم رنگ پس‌زمینه بر اساس رنگ پوستر
+        if (img.complete && img.naturalHeight !== 0) {
+          try {
+            const rgb = colorThief.getColor(img);
+            document.body.style.backgroundColor = `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
+          } catch (e) {
+            console.warn("امکان استخراج رنگ نیست:", e);
+          }
+        } else {
+          img.addEventListener('load', () => {
+            try {
+              const rgb = colorThief.getColor(img);
+              document.body.style.backgroundColor = `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
+            } catch (e) {
+              console.warn("امکان استخراج رنگ نیست:", e);
+            }
+          });
+        }
+      }, 3000); // 7 ثانیه
+    });
+  </script>
+</body>
+</html>
