@@ -67,7 +67,7 @@
 
   <!-- پوستر -->
   <div class="poster-container hidden" id="posterContainer">
-    <img id="poster" src="poster.jpg" alt="پوستر"
+    <img id="poster" src="poster.png" alt="پوستر"
          crossorigin="anonymous"
          onerror="this.style.display='none'; document.getElementById('fallback').style.display='block';">
     <div id="fallback" class="fallback-text">متأسفیم، تصویر بارگذاری نشد.</div>
@@ -93,7 +93,7 @@
         if (img.complete && img.naturalHeight !== 0) {
           try {
             const rgb = colorThief.getColor(img);
-            document.body.style.backgroundColor = `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
+            document.body.style.backgroundColor = `rgba(203,240,248,255)`;
           } catch (e) {
             console.warn("امکان استخراج رنگ نیست:", e);
           }
